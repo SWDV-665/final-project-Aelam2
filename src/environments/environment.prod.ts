@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  API_HOST: "https://loan-calculator-api-staging.azurewebsites.net/"
 };
