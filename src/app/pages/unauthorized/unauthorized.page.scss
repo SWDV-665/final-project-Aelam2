@@ -1,0 +1,57 @@
+.content {
+  background-color: var(--component-background);
+  padding-top: 10vh;
+}
+
+.top-right {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  #theme-selector {
+    cursor: pointer;
+  }
+}
+
+.top {
+  text-align: center;
+
+  .header {
+    color: #fff;
+
+    .title {
+      position: relative;
+      width: 100%;
+      min-width: 85%;
+      margin: auto;
+      top: 2px;
+      font-weight: 600;
+      font-size: 32px;
+
+      span {
+        &::before {
+          display: inline-block;
+          font-size: inherit;
+          height: 0.75em;
+          overflow: visible;
+          vertical-align: -0.25em;
+
+          width: 0.55em;
+
+          content: url("../../../assets/DollarLogoColor.svg");
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .desc {
+    margin-top: 6px;
+    margin-bottom: 40px;
+    color: fade(#fff, 45%);
+    font-size: 16px;
+  }
+}

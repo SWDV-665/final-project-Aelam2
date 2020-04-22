@@ -1,0 +1,49 @@
+<ion-content>
+  <div class="wrapper">
+    <form [formGroup]="userLoginForm">
+      <ion-input id="UserName" name="UserName" placeholder="Username" formControlName="UserName" type="text" required>
+        <ion-icon name="person"></ion-icon>
+      </ion-input>
+      <ion-input id="Password" name="Password" placeholder="Password" formControlName="Password" type="password" required>
+        <ion-icon name="lock-closed"></ion-icon>
+      </ion-input>
+
+      <div class="meta-action-row">
+        <ion-label class="check-box-remember"> <ion-checkbox color="primary" mode="md"></ion-checkbox> Remember me </ion-label>
+        <a><ion-text color="secondary">Forgot Password</ion-text></a>
+      </div>
+
+      <div class="login-row">
+        <ion-button expand="block" type="submit" form="ngForm" [disabled]="!userLoginForm.valid || loading === true" (click)="signIn()">
+          <div *ngIf="!loading else spinner">Login</div>
+          <ng-template #spinner><ion-spinner name="crescent"></ion-spinner></ng-template>
+        </ion-button>
+        <a routerLink="/unauth/sign-up"><ion-text color="secondary">Create New Account</ion-text></a>
+      </div>
+    </form>
+
+    <div class="alternative-methods">
+      <div class="divider">
+        OR
+      </div>
+      <div>
+        <ion-button expand="block" (click)="signInWithGoogle()">
+          <ion-icon name="logo-google" *ngIf="!googleLoading else googleSpiner"></ion-icon>
+          <ng-template #googleSpiner>
+            <ion-icon name="logo-google"><ion-spinner name="crescent"></ion-spinner></ion-icon>
+          </ng-template>
+
+          <span>Continue with Google</span>
+        </ion-button>
+        <ion-button expand="block" (click)="signInWithFB()">
+          <ion-icon name="logo-facebook" *ngIf="!facebookLoading else facebookSpinner"></ion-icon>
+          <ng-template #facebookSpinner>
+            <ion-icon name="logo-facebook"><ion-spinner name="crescent"></ion-spinner></ion-icon>
+          </ng-template>
+
+          <span>Continue with Facebook</span>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
