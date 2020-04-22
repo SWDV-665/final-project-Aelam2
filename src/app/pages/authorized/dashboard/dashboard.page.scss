@@ -1,0 +1,15 @@
+ion-tab-bar.overview-tabs {
+  background-color: var(--layout-header-background);
+
+  ion-tab-button {
+    --background: var(--layout-header-background);
+    --color: var(--layout-tab-color);
+    --color-selected: var(--layout-tab-selected-color);
+
+    ion-icon {
+    }
+
+    ion-label {
+    }
+  }
+}
