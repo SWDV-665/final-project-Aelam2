@@ -6,9 +6,6 @@ import { map, mergeMap } from "rxjs/operators";
 
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { Router } from "@angular/router";
-
-const TOKEN_KEY = "JWT_TOKEN";
 
 interface SignInData {
   UserName: string;
@@ -36,7 +33,7 @@ export class AuthenticationService {
   constructor(private storage: Storage, private platform: Platform, private http: HttpClient) {
     // Check if stored token exists
     this.platform.ready().then(() => {
-      this.storage.get(TOKEN_KEY).then(res => {
+      this.storage.get(environment.storage.JWT_TOKEN).then(res => {
         console.log("JWT_TOKEN", res);
         this.authenticated.next(res ? true : false);
       });
@@ -47,34 +44,26 @@ export class AuthenticationService {
     return this.http.post(`${environment.API_HOST}/sign-in`, data);
   };
 
-  // signInWithGoogle = (): Observable<any> => {
-  //   return from(this.socialAuth.signIn(GoogleLoginProvider.PROVIDER_ID)).pipe(
-  //     mergeMap(user => {
-  //       return this.http.post(`${environment.API_HOST}/oauth/google`, { access_token: user.authToken });
-  //     })
-  //   );
-  // };
+  signInWithGoogle = (googleId: String): Observable<any> => {
+    return this.http.post(`${environment.API_HOST}/oauth/google`, { access_token: googleId });
+  };
 
-  // signInWithFB = (): Observable<any> => {
-  //   return from(this.socialAuth.signIn(FacebookLoginProvider.PROVIDER_ID)).pipe(
-  //     mergeMap(user => {
-  //       return this.http.post(`${environment.API_HOST}/oauth/facebook`, { access_token: user.authToken });
-  //     })
-  //   );
-  // };
+  signInWithFB = (facebookId: string): Observable<any> => {
+    return this.http.post(`${environment.API_HOST}/oauth/facebook`, { access_token: facebookId });
+  };
 
   signUp = (data: SignUpData): Observable<any> => {
     return this.http.post(`${environment.API_HOST}/sign-up`, data);
   };
 
   signOut = () => {
-    return this.storage.remove(TOKEN_KEY).then(() => {
+    return this.storage.remove(environment.storage.JWT_TOKEN).then(() => {
       this.authenticated.next(false);
     });
   };
 
   setAuthToken = (token: AccessToken) => {
-    return this.storage.set(TOKEN_KEY, token).then(() => {
+    return this.storage.set(environment.storage.JWT_TOKEN, token).then(() => {
       this.authenticated.next(true);
     });
   };

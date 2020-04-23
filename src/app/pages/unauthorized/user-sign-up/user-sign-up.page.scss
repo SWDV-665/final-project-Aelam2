@@ -12,6 +12,14 @@ ion-content {
   margin: auto;
 }
 
+.form-group {
+  margin-bottom: 28px;
+
+  &.has-error {
+    margin-bottom: 12px;
+  }
+}
+
 ion-input {
   display: inline-flex;
   border: 1px solid #d9d9d9;
@@ -19,7 +27,6 @@ ion-input {
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
   display: -ms-inline-flexbox;
-  margin-bottom: 18px;
 
   --background: var(--component-background);
   --color: var(--text-color);
@@ -60,4 +67,37 @@ ion-input {
     height: 40px;
     width: 50%;
   }
+}
+
+.strength {
+  &-none {
+    --progress-background: var(--ion-color-danger);
+  }
+  &-poor {
+    --progress-background: var(--ion-color-danger);
+  }
+  &-ok {
+    --progress-background: var(--ion-color-warning);
+  }
+  &-pass {
+    --progress-background: var(--ion-color-success);
+  }
+}
+
+ion-icon {
+  position: absolute;
+  right: 10px;
+
+  &[name="checkmark-outline"] {
+    color: var(--ion-color-success);
+  }
+
+  &[name="close-outline"] {
+    color: var(--ion-color-danger);
+  }
+}
+
+.error {
+  color: #ff4d4f;
+  font-size: 12px;
 }

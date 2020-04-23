@@ -1,18 +1,69 @@
 <ion-content>
   <div class="wrapper">
-    <ion-input placeholder="Username"> </ion-input>
-    <ion-input placeholder="Password"> </ion-input>
-    <ion-input placeholder="Confirm Password"> </ion-input>
-    <ion-input placeholder="Email"> </ion-input>
+    <form form="userSignUpForm" [formGroup]="userSignUpForm" (ngSubmit)="handleSignUp()">
+      <div class="form-group" [ngClass]="displayErrorClass('UserName')">
+        <ion-input id="UserName" name="UserName" placeholder="Username" formControlName="UserName" type="text"> </ion-input>
+        <div *ngIf="formData.UserName" class="alert alert-danger">
+          <div *ngIf="submitted && formData.UserName.errors?.required" class="error">
+            Username is required.
+          </div>
+        </div>
+      </div>
 
-    <div class="form-row">
-      <ion-input placeholder="First Name"> </ion-input>
-      <ion-input placeholder="Last Name"> </ion-input>
-    </div>
+      <div class="form-group" [ngClass]="displayErrorClass('Password')">
+        <ion-input id="Password" name="Password" placeholder="Password" formControlName="Password" type="password"> </ion-input>
+        <ion-progress-bar
+          value="{{passwordStrength === 'poor' ? .33 : passwordStrength === 'ok' ? .66 : passwordStrength === 'pass' ? 1 : 0}}"
+          class="strength-{{passwordStrength}}"
+        ></ion-progress-bar>
 
-    <div class="meta-action-row">
-      <ion-button expand="full">Register</ion-button>
-      <a routerLink="/unauth/sign-in" routerDirection="back"><ion-text color="secondary">Already have an account?</ion-text></a>
-    </div>
+        <div *ngIf="formData.Password" class="alert alert-danger">
+          <div *ngIf="submitted && formData.Password.errors?.required" class="error">
+            Password is required.
+          </div>
+          <div *ngIf="submitted && formData.Password.errors?.minlength" class="error">
+            Must be atleast 8 characters
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-input id="ConfirmPassowrd" name="ConfirmPassowrd" placeholder="Confirm Password" formControlName="ConfirmPassowrd" type="password">
+          <ion-icon
+            *ngIf="crossFieldErrors?.notSame && formData.ConfirmPassowrd && (formData.ConfirmPassowrd.dirty || formData.ConfirmPassowrd.touched)"
+            name="close-outline"
+          ></ion-icon>
+          <ion-icon
+            *ngIf="!crossFieldErrors?.notSame && formData.ConfirmPassowrd && (formData.ConfirmPassowrd.dirty || formData.ConfirmPassowrd.touched)"
+            name="checkmark-outline"
+          ></ion-icon>
+        </ion-input>
+      </div>
+
+      <div class="form-group" [ngClass]="displayErrorClass('Email')">
+        <ion-input id="Email" name="Email" placeholder="Email" formControlName="Email" type="Email"> </ion-input>
+        <div *ngIf="formData.Email" class="alert alert-danger">
+          <div *ngIf="submitted && formData.Email.errors?.required" class="error">
+            Email is required.
+          </div>
+          <div *ngIf="submitted && formData.Email.errors?.email" class="error">
+            Must be a valid email
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row form-group">
+        <ion-input id="FirstName" name="FirstName" placeholder="First Name" formControlName="FirstName" type="text"> </ion-input>
+        <ion-input id="LastName" name="LastName" placeholder="Last Name" formControlName="LastName" type="text"> </ion-input>
+      </div>
+
+      <div class="meta-action-row">
+        <ion-button expand="full" type="submit">
+          <div *ngIf="!submitting else spinner">Register</div>
+          <ng-template #spinner><ion-spinner name="crescent"></ion-spinner></ng-template>
+        </ion-button>
+        <a routerLink="/unauth/sign-in" routerDirection="back"><ion-text color="secondary">Already have an account?</ion-text></a>
+      </div>
+    </form>
   </div>
 </ion-content>

@@ -14,7 +14,13 @@
       </div>
 
       <div class="login-row">
-        <ion-button expand="block" type="submit" form="ngForm" [disabled]="!userLoginForm.valid || loading === true" (click)="signIn()">
+        <ion-button
+          expand="block"
+          type="submit"
+          form="ngForm"
+          [disabled]="!userLoginForm.valid || googleLoading || facebookLoading || loading"
+          (click)="signIn()"
+        >
           <div *ngIf="!loading else spinner">Login</div>
           <ng-template #spinner><ion-spinner name="crescent"></ion-spinner></ng-template>
         </ion-button>
@@ -27,18 +33,18 @@
         OR
       </div>
       <div>
-        <ion-button expand="block" (click)="signInWithGoogle()">
+        <ion-button expand="block" (click)="signInWithGoogle()" [disabled]="googleLoading || facebookLoading || loading">
           <ion-icon name="logo-google" *ngIf="!googleLoading else googleSpiner"></ion-icon>
           <ng-template #googleSpiner>
-            <ion-icon name="logo-google"><ion-spinner name="crescent"></ion-spinner></ion-icon>
+            <ion-spinner name="crescent"></ion-spinner>
           </ng-template>
 
           <span>Continue with Google</span>
         </ion-button>
-        <ion-button expand="block" (click)="signInWithFB()">
+        <ion-button expand="block" (click)="signInWithFB()" [disabled]="googleLoading || facebookLoading || loading">
           <ion-icon name="logo-facebook" *ngIf="!facebookLoading else facebookSpinner"></ion-icon>
           <ng-template #facebookSpinner>
-            <ion-icon name="logo-facebook"><ion-spinner name="crescent"></ion-spinner></ion-icon>
+            <ion-spinner name="crescent"></ion-spinner>
           </ng-template>
 
           <span>Continue with Facebook</span>

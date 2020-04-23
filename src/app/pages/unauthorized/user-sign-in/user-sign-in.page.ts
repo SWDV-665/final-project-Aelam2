@@ -1,8 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { ToastController } from "@ionic/angular";
-import { AuthenticationService } from "../../../services/authentication/authentication.service";
+import { ToastController, Platform } from "@ionic/angular";
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { AuthService } from "angularx-social-login";
+import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
+import { Plugins } from "@capacitor/core";
+
+const { BiometricAuth } = Plugins;
 
 @Component({
   selector: "app-user-sign-in",
@@ -15,7 +19,17 @@ export class UserSignInPage implements OnInit {
   googleLoading: boolean = false;
   facebookLoading: boolean = false;
 
-  constructor(public toastController: ToastController, private fb: FormBuilder, private authService: AuthenticationService) {}
+  constructor(
+    public toastController: ToastController,
+    private fb: FormBuilder,
+    private authService: AuthenticationService,
+    private socialAuth: AuthService,
+    private platform: Platform
+  ) {
+    platform.pause.subscribe(async () => {
+      alert("Pause event detected");
+    });
+  }
 
   ngOnInit() {
     // INIT Login Form
@@ -45,94 +59,90 @@ export class UserSignInPage implements OnInit {
             .then(toast => {
               toast.present();
             });
-        } else {
-          this.toastController
-            .create({
-              message: "An unexpected error occured",
-              duration: 2000,
-              position: "top",
-              color: "danger"
-            })
-            .then(toast => {
-              toast.present();
-            });
         }
+
         this.loading = false;
       }
     );
   };
 
-  // signInWithGoogle = async () => {
-  //   this.googleLoading = true;
+  signInWithGoogle = async () => {
+    this.googleLoading = true;
+    let user = await this.socialAuth.signIn(GoogleLoginProvider.PROVIDER_ID);
 
-  //   this.authService.signInWithGoogle().subscribe(
-  //     res => {
-  //       this.googleLoading = false;
-  //       this.authService.setAuthToken(res.token);
-  //     },
-  //     (error: any) => {
-  //       if (error.status === 401) {
-  //         this.toastController
-  //           .create({
-  //             message: "Invalid username or password",
-  //             duration: 2000,
-  //             position: "top",
-  //             color: "light"
-  //           })
-  //           .then(toast => {
-  //             toast.present();
-  //           });
-  //       } else {
-  //         this.toastController
-  //           .create({
-  //             message: "An unexpected error occured",
-  //             duration: 2000,
-  //             position: "top",
-  //             color: "danger"
-  //           })
-  //           .then(toast => {
-  //             toast.present();
-  //           });
-  //       }
-  //       this.googleLoading = false;
-  //     }
-  //   );
-  // };
+    this.authService.signInWithGoogle(user.id).subscribe(
+      res => {
+        this.googleLoading = false;
+        this.authService.setAuthToken(res.token);
+      },
+      (error: any) => {
+        if (error.status === 401) {
+          this.toastController
+            .create({
+              message: "Invalid username or password",
+              duration: 2000,
+              position: "top",
+              color: "light"
+            })
+            .then(toast => {
+              toast.present();
+            });
+        }
 
-  // signInWithFB = async () => {
-  //   this.facebookLoading = true;
-  //   // Pass Login Form values to authService for sign-in
-  //   this.authService.signInWithFB().subscribe(
-  //     res => {
-  //       this.facebookLoading = false;
-  //       this.authService.setAuthToken(res.token);
-  //     },
-  //     (error: any) => {
-  //       if (error.status === 401) {
-  //         this.toastController
-  //           .create({
-  //             message: "Invalid username or password",
-  //             duration: 2000,
-  //             position: "top",
-  //             color: "light"
-  //           })
-  //           .then(toast => {
-  //             toast.present();
-  //           });
-  //       } else {
-  //         this.toastController
-  //           .create({
-  //             message: "An unexpected error occured",
-  //             duration: 2000,
-  //             position: "top",
-  //             color: "danger"
-  //           })
-  //           .then(toast => {
-  //             toast.present();
-  //           });
-  //       }
-  //       this.facebookLoading = false;
-  //     }
-  //   );
-  // };
+        this.googleLoading = false;
+      }
+    );
+  };
+
+  signInWithFB = async () => {
+    this.facebookLoading = true;
+
+    let user = await this.socialAuth.signIn(FacebookLoginProvider.PROVIDER_ID);
+
+    // Pass Login Form values to authService for sign-in
+    this.authService.signInWithFB(user.id).subscribe(
+      res => {
+        this.facebookLoading = false;
+        this.authService.setAuthToken(res.token);
+      },
+      (error: any) => {
+        if (error.status === 401) {
+          this.toastController
+            .create({
+              message: "Invalid username or password",
+              duration: 2000,
+              position: "top",
+              color: "light"
+            })
+            .then(toast => {
+              toast.present();
+            });
+        }
+
+        this.facebookLoading = false;
+      }
+    );
+  };
+
+  unlockWithBiometric = async () => {
+    const available = await BiometricAuth.isAvailable();
+
+    if (available.has) {
+      const authResult = await BiometricAuth.verify({
+        reason: "Biometric Login",
+        title: "Biometric Login"
+      });
+
+      if (authResult.verified) {
+        console.log("here");
+        // success authentication
+      } else {
+        console.log("failed biometric");
+
+        // fail authentication
+      }
+    } else {
+      // biometric not available
+    }
+  };
 }
