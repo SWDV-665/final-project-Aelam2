@@ -4,9 +4,13 @@
 
 export const environment = {
   production: false,
-  API_HOST: "https://loan-calculator-api-staging.azurewebsites.net/",
+  API_HOST: "http://localhost:3001",
   GOOGLE_CLIENT_ID: "395522895595-mg2923mps4fm0jlb9p9j3ag0hsfrrvlg.apps.googleusercontent.com",
-  FACEBOOK_APP_ID: "649424762459082"
+  FACEBOOK_APP_ID: "649424762459082",
+  storage: {
+    JWT_TOKEN: "JWT_TOKEN",
+    HIDDEN_LOANS: "HIDDEN_LOANS"
+  }
 };
 
 /*
