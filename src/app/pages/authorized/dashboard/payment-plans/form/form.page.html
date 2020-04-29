@@ -1,0 +1,125 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="primary" fill="solid" style="width: 75px;" [disabled]="!planForm.valid || submitting || deleting" (click)="submitPlanForm()">
+        <span *ngIf="!submitting else spinner">Save</span>
+        <ng-template #spinner>
+          <ion-spinner name="crescent"></ion-spinner>
+        </ng-template>
+      </ion-button>
+
+      <ion-button *ngIf="PaymentPlanID" color="danger" fill="solid" style="margin-left: 7.5px; width: 75px;" (click)="deletePlan()">
+        <span *ngIf="!deleting else spinner">Delete</span>
+        <ng-template #spinner>
+          <ion-spinner name="crescent"></ion-spinner>
+        </ng-template>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="start">
+      <ion-button color="medium" fill="outline" [routerLink]="'/auth/dashboard/payment-plans'">
+        <ion-icon ios="chevron-back" md="chevron-back-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="planForm">
+    <div class="form-item" [ngClass]="displayErrorClass('PlanName')">
+      <ion-label position="floating">Plan Name</ion-label>
+      <ion-input id="PlanName" name="PlanName" formControlName="PlanName" type="text"> </ion-input>
+
+      <div *ngIf="formData.PlanName" class="alert alert-danger">
+        <div *ngIf="formData.PlanName.errors?.required" class="error">
+          Plan Name is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-item" [ngClass]="displayErrorClass('AllocationMethodID')">
+      <ion-label position="floating">Allocation Method</ion-label>
+      <ion-select formControlName="AllocationMethodID" interface="action-sheet" [interfaceOptions]="allocationSelectOptions">
+        <ion-select-option value="5">Avalanche - Highest Interest First</ion-select-option>
+        <ion-select-option value="4">Snowball - Lowest Balance First</ion-select-option>
+      </ion-select>
+
+      <div *ngIf="formData.AllocationMethodID" class="alert alert-danger">
+        <div *ngIf="formData.AllocationMethodID.errors?.required" class="error">
+          Method is requied
+        </div>
+      </div>
+    </div>
+
+    <div class="payments">
+      <div class="payments-header">
+        <h3>Payments</h3>
+        <ion-button fill="solid" (click)="addPaymentToForm()">
+          Add Payment
+        </ion-button>
+      </div>
+      <div class="payments-content">
+        <Accordion>
+          <AccordionPanel formArrayName="Payments" [header]="payment.value.PaymentName" *ngFor="let payment of PaymentForm.controls; let index = index;">
+            <div formGroupName="0" class="payment-panel">
+              <div class="form-item" [ngClass]="displayArrayErrorClass('PaymentName', index)">
+                <ion-label position="floating">Payment Name</ion-label>
+                <ion-input id="PaymentName" name="PaymentName" formControlName="PaymentName" type="text"> </ion-input>
+                <div *ngIf="PaymentItem('PaymentName', index)" class="alert alert-danger">
+                  <div *ngIf="PaymentItem('PaymentName', index).errors?.required" class="error">
+                    Name is Required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-item" [ngClass]="displayArrayErrorClass('PaymentAmount', index)">
+                <ion-label position="floating">Payment Amount</ion-label>
+                <ion-input id="PaymentAmount" name="PaymentAmount" formControlName="PaymentAmount" type="number"> </ion-input>
+                <div *ngIf="PaymentItem('PaymentAmount', index)" class="alert alert-danger">
+                  <div *ngIf="PaymentItem('PaymentAmount', index).errors?.required" class="error">
+                    Amount is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div
+                  class="form-item"
+                  style="display: inline-block; width: calc(50% - 5px); margin-right: 8px;"
+                  [ngClass]="displayArrayErrorClass('PaymentDate', index)"
+                >
+                  <ion-label position="floating">Start Date</ion-label>
+                  <ion-datetime
+                    formControlName="PaymentDate"
+                    [cancelText]="datePickerOptions.cancelText"
+                    [doneText]="datePickerOptions.doneText"
+                    [min]="datePickerOptions.min"
+                    style="width: 100%;"
+                  ></ion-datetime>
+                  <div *ngIf="PaymentItem('PaymentDate', index)" class="alert alert-danger">
+                    <div *ngIf="PaymentItem('PaymentDate', index).errors?.required" class="error">
+                      First Payment Date is required
+                    </div>
+                  </div>
+                </div>
+                <div class="form-item" style="display: inline-block; width: calc(50%);" [ngClass]="displayArrayErrorClass('RecurringTypeID', index)">
+                  <ion-label position="floating">Repeat?</ion-label>
+                  <ion-select formControlName="RecurringTypeID" interface="action-sheet" [interfaceOptions]="repeatSelectOptions">
+                    <ion-select-option value="6">Never</ion-select-option>
+                    <ion-select-option value="7">Monthly</ion-select-option>
+                    <ion-select-option value="8">Yearly</ion-select-option>
+                  </ion-select>
+                  <div *ngIf="PaymentItem('RecurringTypeID', index)" class="alert alert-danger">
+                    <div *ngIf="PaymentItem('RecurringTypeID', index).errors?.required" class="error">
+                      Repeat is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AccordionPanel>
+        </Accordion>
+      </div>
+    </div>
+  </form>
+</ion-content>

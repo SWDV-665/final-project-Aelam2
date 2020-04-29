@@ -1,3 +1,57 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-buttons slot="primary">
+      <ion-button color="primary" fill="solid" [routerLink]="'/auth/dashboard/payment-plans/0'">
+        + Create Plan
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>My Plans</ion-title>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
-  My Payment Plans
+  <!-- If loading Payment Plans -->
+  <div *ngIf="loading">
+    <div class="list-skeleton" *ngFor="let i of generateArray(4)">
+      <div class="plan-info">
+        <ion-skeleton-text animated></ion-skeleton-text>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </div>
+      <div class="plan-actions">
+        <ion-skeleton-text animated></ion-skeleton-text>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </div>
+    </div>
+  </div>
+
+  <!-- If not loading and no Payment Plans were fetched -->
+  <div class="no-plans" text-center *ngIf="plans.length === 0 && !loading">
+    <div class="icon">
+      <ion-icon ios="cash" md="cash-sharp"></ion-icon>
+    </div>
+    <h3 class="description">
+      Create a new plan to get started!
+    </h3>
+  </div>
+
+  <ion-list>
+    <div *ngFor="let plan of plans">
+      <ion-item lines="full">
+        <div class="listItemContent">
+          <h4 class="listItemTitle">{{plan.PlanName}}</h4>
+          <span class="listItemMeta"
+            >{{plan.AllocationMethod.CodeValueName}} / {{plan.Payments.length}} {{plan.Payments.length == 1 ? 'payment' : "payments"}}
+          </span>
+        </div>
+        <ion-icon slot="end" ios="create" md="create" [routerLink]="'/auth/dashboard/payment-plans/' + plan.PaymentPlanID"></ion-icon>
+        <ion-icon
+          slot="end"
+          ios="checkmark-circle"
+          md="checkmark-circle-sharp"
+          [color]="plan.IsCurrent ? 'primary' : 'medium'"
+          (click)="toggleActivePlan(plan.PaymentPlanID, plan.IsCurrent)"
+        ></ion-icon>
+      </ion-item>
+    </div>
+  </ion-list>
 </ion-content>
