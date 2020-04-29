@@ -16,6 +16,9 @@ import { InterceptorService } from "src/app/services/interceptor/interceptor.ser
 import { environment } from "src/environments/environment";
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
 import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { FormsModule } from "@angular/forms";
+import { NgZorroAntdMobileModule } from 'ng-zorro-antd-mobile';
 
 // Social Media Login Config
 let config = new AuthServiceConfig([
@@ -37,7 +40,18 @@ export function provideConfig() {
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicStorageModule.forRoot(), RouterModule, HttpClientModule, SocialLoginModule],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    IonicStorageModule.forRoot(),
+    RouterModule,
+    HttpClientModule,
+    SocialLoginModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    NgZorroAntdMobileModule
+  ],
   providers: [
     StatusBar,
     SplashScreen,

@@ -34,7 +34,6 @@ export class AuthenticationService {
     // Check if stored token exists
     this.platform.ready().then(() => {
       this.storage.get(environment.storage.JWT_TOKEN).then(res => {
-        console.log("JWT_TOKEN", res);
         this.authenticated.next(res ? true : false);
       });
     });

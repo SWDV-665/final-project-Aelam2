@@ -11,32 +11,6 @@ ion-content {
   margin: auto;
 }
 
-ion-input {
-  display: inline-flex;
-  border: 1px solid #d9d9d9;
-  border-radius: 2px;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  display: -ms-inline-flexbox;
-  margin-bottom: 18px;
-
-  --background: var(--component-background);
-  --color: var(--text-color);
-  --padding-start: 12px;
-
-  &.has-focus {
-    border-color: #ff87b3;
-    border-right-width: 1px !important;
-    outline: 0;
-    -webkit-box-shadow: 0 0 0 2px rgba(252, 92, 156, 0.2);
-    box-shadow: 0 0 0 2px rgba(252, 92, 156, 0.2);
-  }
-
-  ion-icon {
-    margin-left: 6px;
-  }
-}
-
 .meta-action-row {
   display: flex;
   align-items: center;

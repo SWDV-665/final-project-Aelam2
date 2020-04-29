@@ -69,8 +69,8 @@ export class UserSignInPage implements OnInit {
   signInWithGoogle = async () => {
     this.googleLoading = true;
     let user = await this.socialAuth.signIn(GoogleLoginProvider.PROVIDER_ID);
-
-    this.authService.signInWithGoogle(user.id).subscribe(
+    console.log(user);
+    this.authService.signInWithGoogle(user.authToken).subscribe(
       res => {
         this.googleLoading = false;
         this.authService.setAuthToken(res.token);
@@ -100,7 +100,7 @@ export class UserSignInPage implements OnInit {
     let user = await this.socialAuth.signIn(FacebookLoginProvider.PROVIDER_ID);
 
     // Pass Login Form values to authService for sign-in
-    this.authService.signInWithFB(user.id).subscribe(
+    this.authService.signInWithFB(user.authToken).subscribe(
       res => {
         this.facebookLoading = false;
         this.authService.setAuthToken(res.token);
