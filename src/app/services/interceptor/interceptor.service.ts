@@ -3,16 +3,15 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from "@angular/c
 import { Storage } from "@ionic/storage";
 import { Observable, from, throwError } from "rxjs";
 import { mergeMap, catchError } from "rxjs/operators";
-
 import { ToastController } from "@ionic/angular";
-
 import { environment } from "src/environments/environment";
+import { AuthenticationService } from "../authentication/authentication.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class InterceptorService implements HttpInterceptor {
-  constructor(private storage: Storage, private toastCtrl: ToastController) {}
+  constructor(private storage: Storage, private toastCtrl: ToastController, private authService: AuthenticationService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let promise = this.storage.get(environment.storage.JWT_TOKEN);
@@ -34,6 +33,10 @@ export class InterceptorService implements HttpInterceptor {
             .then(toast => {
               toast.present();
             });
+        }
+
+        if (error.status === 401) {
+          this.authService.signOut();
         }
 
         return throwError(error);
