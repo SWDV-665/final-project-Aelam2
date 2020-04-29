@@ -1,3 +1,57 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-buttons slot="primary">
+      <ion-button color="primary" fill="solid" [routerLink]="'/auth/dashboard/loans/0'">
+        + Add Loan
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>My Loans</ion-title>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
-  My Loans
+  <!-- If loading loans -->
+  <div *ngIf="loading" else>
+    <div class="list-skeleton" *ngFor="let i of generateArray(4)">
+      <div class="loan-info">
+        <ion-skeleton-text animated></ion-skeleton-text>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </div>
+      <div class="loan-actions">
+        <ion-skeleton-text animated></ion-skeleton-text>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </div>
+    </div>
+  </div>
+
+  <!-- If not loading and no loans were fetched -->
+  <div class="no-loans" text-center *ngIf="Loans.length === 0 && !loading" #NoLoans>
+    <div class="icon">
+      <ion-icon ios="documents" md="documents-sharp"></ion-icon>
+    </div>
+    <h3 class="description">
+      Add your loans to get started!
+    </h3>
+  </div>
+
+  <ion-list *ngIf="Loans.length && !loading">
+    <div *ngFor="let loan of Loans">
+      <ion-item lines="full">
+        <div class="listItemContent">
+          <h4 class="listItemTitle">{{loan.LoanName}}</h4>
+          <span class="listItemMeta"
+            >{{loan.LoanBalance | currency:'USD':true:'1.0-0'}} / {{loan.PaymentMinimum | currency:'USD':true:'1.0-0'}} / {{loan.InterestRate * 100}}%
+          </span>
+        </div>
+        <ion-icon slot="end" ios="create" md="create" [routerLink]="'/auth/dashboard/loans/' + loan.LoanID"></ion-icon>
+        <ion-icon
+          slot="end"
+          [ios]="loan.hidden ? 'eye-off' : 'eye'"
+          [md]="loan.hidden ? 'eye-off-sharp' : 'eye-sharp'"
+          [color]="loan.hidden ? 'primary': 'medium' "
+          (click)="toggleHiddenLoan(loan.LoanID, loan.hidden)"
+        ></ion-icon>
+      </ion-item>
+    </div>
+  </ion-list>
 </ion-content>

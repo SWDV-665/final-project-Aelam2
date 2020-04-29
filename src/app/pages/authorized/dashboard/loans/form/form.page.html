@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="primary" fill="solid" style="width: 75px;" [disabled]="!loanForm.valid || submitting || deleting" (click)="submitLoanForm()">
+        <span *ngIf="!submitting else spinner">Save</span>
+        <ng-template #spinner>
+          <ion-spinner name="crescent"></ion-spinner>
+        </ng-template>
+      </ion-button>
+
+      <ion-button *ngIf="LoanID" color="danger" fill="solid" style="margin-left: 7.5px; width: 75px;" (click)="deleteLoan()">
+        <span *ngIf="!deleting else spinner">Delete</span>
+        <ng-template #spinner>
+          <ion-spinner name="crescent"></ion-spinner>
+        </ng-template>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="start">
+      <ion-button color="medium" fill="outline" [routerLink]="'/auth/dashboard/loans'">
+        <ion-icon ios="chevron-back" md="chevron-back-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="loanForm">
+    <div class="form-item" [ngClass]="displayErrorClass('LoanName')">
+      <ion-label position="floating">Loan Name</ion-label>
+      <ion-input id="LoanName" name="LoanName" formControlName="LoanName" type="text"> </ion-input>
+      <div *ngIf="formData.LoanName" class="alert alert-danger">
+        <div *ngIf="formData.LoanName.errors?.required" class="error">
+          Loan Name is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-item" [ngClass]="displayErrorClass('LoanBalance')">
+      <ion-label position="floating">Loan Balance</ion-label>
+      <ion-input id="LoanBalance" name="LoanBalance" formControlName="LoanBalance" type="number" myCurrencyFormatter> </ion-input>
+      <div *ngIf="formData.LoanBalance" class="alert alert-danger">
+        <div *ngIf="formData.LoanBalance.errors?.required" class="error">
+          Starting Balance is requied
+        </div>
+      </div>
+    </div>
+
+    <div class="form-item" [ngClass]="displayErrorClass('InterestRate')">
+      <ion-label position="floating">Interest Rate</ion-label>
+      <ion-input id="InterestRate" name="InterestRate" formControlName="InterestRate" type="number" step=".25"> </ion-input>
+      <div *ngIf="formData.InterestRate" class="alert alert-danger">
+        <div *ngIf="formData.InterestRate.errors?.required" class="error">
+          Interest Rate is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-item" style="display: inline-block; width: calc(50% - 5px); margin-right: 8px;" [ngClass]="displayErrorClass('PaymentMinimum')">
+        <ion-label position="floating">Minimum Payment</ion-label>
+        <ion-input id="PaymentMinimum" name="PaymentMinimum" formControlName="PaymentMinimum" type="number" myCurrencyFormatter> </ion-input>
+        <div *ngIf="formData.PaymentMinimum" class="alert alert-danger">
+          <div *ngIf="formData.PaymentMinimum.errors?.required" class="error">
+            Minimum Payment is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-item" style="display: inline-block; width: calc(50%);" [ngClass]="displayErrorClass('PaymentStart')">
+        <ion-label position="floating">Next Payment Date</ion-label>
+        <ion-datetime
+          formControlName="PaymentStart"
+          [cancelText]="datePickerOptions.cancelText"
+          [doneText]="datePickerOptions.doneText"
+          [min]="datePickerOptions.min"
+          [max]="datePickerOptions.max"
+          style="width: 100%;"
+        ></ion-datetime>
+        <div *ngIf="formData.PaymentStart" class="alert alert-danger">
+          <div *ngIf="formData.PaymentStart.errors?.required" class="error">
+            First Payment date is required
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ion-content>
