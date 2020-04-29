@@ -6,7 +6,10 @@ ion-tab-bar.overview-tabs {
     --color: var(--layout-tab-color);
     --color-selected: var(--layout-tab-selected-color);
 
-    ion-icon {
+    &:not(.tab-selected) {
+      ion-icon {
+        color: var(--layout-tab-color);
+      }
     }
 
     ion-label {
