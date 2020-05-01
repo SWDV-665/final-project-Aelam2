@@ -5,7 +5,6 @@ import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { AuthenticationService } from "../authentication/authentication.service";
 
 export interface LoanInfo {
   LoanID: Number;
@@ -45,7 +44,7 @@ export class LoansService {
   dataChanged$: Observable<boolean>;
   private dataChangeSubject: Subject<boolean>;
 
-  constructor(private storage: Storage, private platform: Platform, private http: HttpClient, private authService: AuthenticationService) {
+  constructor(private storage: Storage, private platform: Platform, private http: HttpClient) {
     this.dataChangeSubject = new Subject<boolean>();
     this.dataChanged$ = this.dataChangeSubject.asObservable();
 
@@ -105,9 +104,12 @@ export class LoansService {
   };
 
   deleteLoan = (LoanID: LoanInfo["LoanID"]) => {
+    this.removeHiddenLoan(LoanID);
+
     return new Promise((resolve, reject) => {
       return this.http.delete(`${environment.API_HOST}/me/loans/${LoanID}`).subscribe((res: any) => {
         this.Loans = this.Loans.filter(l => !l.LoanID === res.data);
+
         this.dataChangeSubject.next(true);
         resolve(this.Loans);
       });

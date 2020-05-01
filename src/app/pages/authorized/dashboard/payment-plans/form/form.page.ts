@@ -57,7 +57,7 @@ export class FormPage implements OnInit {
   setExistingPlan = () => {
     // If a valid PaymentPlanID is passed to this page then the form will be initalized with existing values
     this.planForm.get("PlanName").setValue(this.plan.PlanName);
-    this.planForm.get("AllocationMethodID").setValue(this.plan.AllocationMethod.CodeValueID);
+    this.planForm.get("AllocationMethodID").setValue(`${this.plan.AllocationMethod.CodeValueID}`);
     for (let payment of this.plan.Payments) {
       let payments = this.PaymentForm;
 
@@ -95,7 +95,7 @@ export class FormPage implements OnInit {
     let payments = this.PaymentForm;
 
     const paymentGroup = this.fb.group({
-      PaymentName: ["New Payment", [Validators.required]],
+      PaymentName: [`New Payment #${this.PaymentForm.length + 1}`, [Validators.required]],
       PaymentDate: [null, [Validators.required]],
       PaymentAmount: [null, [Validators.required, Validators.min(0)]],
       RecurringTypeID: ["6", [Validators.required]]
@@ -113,12 +113,14 @@ export class FormPage implements OnInit {
       this.submitting = true;
 
       let values = Object.assign({}, this.planForm.value);
-      values.InterestRate = values.InterestRate / 100;
+      values.Payments = values.Payments.map(p => {
+        return { ...p, PaymentDate: `${moment(p.PaymentDate).startOf("day").format("YYYY-MM-DDTHH:mm:ss")}Z` };
+      });
 
       if (this.plan && this.PaymentPlanID) {
         await this.planService.updatePaymentPlans(this.PaymentPlanID, values);
       } else {
-        await this.planService.createPaymentPlans(values);
+        await this.planService.createPaymentPlans({ ...values, IsCurrent: 1 });
       }
 
       this.router.navigate(["auth/dashboard/payment-plans"]);

@@ -73,55 +73,59 @@ export class PaymentPlansService {
   };
 
   fetchPaymentPlans = (): Observable<any> => {
-    return this.http.get(`${environment.API_HOST}/me/payment-plans`).pipe(
-      map((res: any) =>
-        res.data.map(plan => {
-          this.paymentPlans.push(plan);
-
-          return plan;
-        })
-      )
-    );
+    return this.http.get(`${environment.API_HOST}/me/payment-plans`).pipe(map((res: any) => (this.paymentPlans = res.data)));
   };
 
   createPaymentPlans = (data: PostPaymentPlanData) => {
-    return this.http.post(`${environment.API_HOST}/me/payment-plans`, data).subscribe((res: any) => {
-      this.paymentPlans = [...this.paymentPlans, res.data];
-      this.dataChangeSubject.next(true);
+    return new Promise((resolve, reject) => {
+      return this.http.post(`${environment.API_HOST}/me/payment-plans`, data).subscribe((res: any) => {
+        this.paymentPlans = [...this.paymentPlans, res.data];
+        this.dataChangeSubject.next(true);
+        resolve(this.paymentPlans);
+      });
     });
   };
 
   updatePaymentPlans = (LoanID: PaymentPlan["PaymentPlanID"], data: PostPaymentPlanData) => {
-    this.http.put(`${environment.API_HOST}/me/payment-plans/${LoanID}`, data).subscribe((res: any) => {
-      this.paymentPlans = this.paymentPlans.map(l => {
-        if (l.PaymentPlanID === res.data.PaymentPlanID) {
-          return res.data;
-        }
+    return new Promise((resolve, reject) => {
+      this.http.put(`${environment.API_HOST}/me/payment-plans/${LoanID}`, data).subscribe((res: any) => {
+        this.paymentPlans = this.paymentPlans.map(l => {
+          if (l.PaymentPlanID === res.data.PaymentPlanID) {
+            return res.data;
+          }
 
-        return l;
+          return l;
+        });
+
+        this.dataChangeSubject.next(true);
+        resolve(this.paymentPlans);
       });
-
-      this.dataChangeSubject.next(true);
     });
   };
 
   deletePaymentPlans = (LoanID: PaymentPlan["PaymentPlanID"]) => {
-    return this.http.delete(`${environment.API_HOST}/me/payment-plans/${LoanID}`).subscribe((res: any) => {
-      this.paymentPlans = this.paymentPlans.filter(l => !l.PaymentPlanID === res.data);
-      this.dataChangeSubject.next(true);
+    return new Promise((resolve, reject) => {
+      return this.http.delete(`${environment.API_HOST}/me/payment-plans/${LoanID}`).subscribe((res: any) => {
+        this.paymentPlans = this.paymentPlans.filter(l => !l.PaymentPlanID === res.data);
+        this.dataChangeSubject.next(true);
+        resolve(this.paymentPlans);
+      });
     });
   };
 
   activatePaymentPlan = (PlanID: PaymentPlan["PaymentPlanID"], IsCurrent: Number) => {
-    return this.http.post(`${environment.API_HOST}/me/payment-plans/${PlanID}/activate`, { IsCurrent }).subscribe((res: any) => {
-      this.paymentPlans = this.paymentPlans.map(p => {
-        if (p.PaymentPlanID === res.data) {
-          return { ...p, IsCurrent: IsCurrent ? true : false };
-        }
-        return p;
-      });
+    return new Promise((resolve, reject) => {
+      return this.http.post(`${environment.API_HOST}/me/payment-plans/${PlanID}/activate`, { IsCurrent }).subscribe((res: any) => {
+        this.paymentPlans = this.paymentPlans.map(p => {
+          if (p.PaymentPlanID === res.data) {
+            return { ...p, IsCurrent: IsCurrent ? true : false };
+          }
+          return p;
+        });
 
-      this.dataChangeSubject.next(true);
+        this.dataChangeSubject.next(true);
+        resolve(this.paymentPlans);
+      });
     });
   };
 }

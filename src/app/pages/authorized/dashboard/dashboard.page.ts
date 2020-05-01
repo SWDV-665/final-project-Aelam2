@@ -21,7 +21,10 @@ export class DashboardPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getLoans();
+    this.getPaymentPlans();
+  }
 
   getLoans = () => {
     this.LoanService.fetchLoans().subscribe(

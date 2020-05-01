@@ -1,7 +1,8 @@
 {
   "name": "LoanCalculator",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }

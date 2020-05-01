@@ -39,7 +39,14 @@
 
     <div class="form-item" [ngClass]="displayErrorClass('AllocationMethodID')">
       <ion-label position="floating">Allocation Method</ion-label>
-      <ion-select formControlName="AllocationMethodID" interface="action-sheet" [interfaceOptions]="allocationSelectOptions">
+      <ion-select
+        id="AllocationMethodID"
+        name="AllocationMethodID"
+        formControlName="AllocationMethodID"
+        interface="action-sheet"
+        [interfaceOptions]="allocationSelectOptions"
+        value="{{formData.AllocationMethodID}}"
+      >
         <ion-select-option value="5">Avalanche - Highest Interest First</ion-select-option>
         <ion-select-option value="4">Snowball - Lowest Balance First</ion-select-option>
       </ion-select>
@@ -61,7 +68,7 @@
       <div class="payments-content">
         <Accordion>
           <AccordionPanel formArrayName="Payments" [header]="payment.value.PaymentName" *ngFor="let payment of PaymentForm.controls; let index = index;">
-            <div formGroupName="0" class="payment-panel">
+            <div formGroupName="{{index}}" class="payment-panel">
               <div class="form-item" [ngClass]="displayArrayErrorClass('PaymentName', index)">
                 <ion-label position="floating">Payment Name</ion-label>
                 <ion-input id="PaymentName" name="PaymentName" formControlName="PaymentName" type="text"> </ion-input>
